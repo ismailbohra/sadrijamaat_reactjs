@@ -1,0 +1,49 @@
+@import '../../scss/colors';
+@import '../../scss/variable';
+
+.form-label {
+  font-family: $agenda-regular;
+  font-size: 15px;
+  text-transform: uppercase;
+}
+
+
+  .focus {
+    box-shadow: none;
+    border: 1px solid $light-black-color;
+  }
+  .is-invalid {
+    border: 1px solid $bright-red;
+    &:focus {
+      box-shadow: none;
+    }
+  }
+
+
+.error-message {
+  color: $bright-red;
+  font-family: "Agenda-Regular";
+  font-size: 12px;
+  padding-left: 5px;
+  position: absolute;
+  &.ml-10 {
+    margin-left: 10px;
+    margin-bottom: 5px;
+  }
+}
+
+.text-indent {
+  text-indent: 15px;
+}
+
+.input-icons {
+  color: $grey-text;
+  position: relative;
+  left: 5px;
+  top: 36px;
+  z-index: 2;
+}
+
+input:placeholder-shown {
+  text-overflow: ellipsis;
+}

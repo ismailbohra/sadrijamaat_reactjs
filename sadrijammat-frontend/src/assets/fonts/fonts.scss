@@ -1,0 +1,181 @@
+@font-face {
+  font-family: 'Agenda-RegularExtraCondensed';
+  src: url('Agenda-RegularExtraCondensed.otf') format('opentype'),
+    url('Agenda-RegularExtraCondensed.woff') format('opentype'),
+    url('Agenda-RegularExtraCondensed.ttf') format('truetype'),
+    url('Agenda-RegularExtraCondensed.svg#Agenda-RegularExtraCondensed') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Agenda-Light';
+  src: url('Agenda-Light.woff') format('opentype'), url('Agenda-Light.ttf') format('truetype'),
+    url('Agenda-Light.svg#Agenda-Light') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Agenda-LightItalic';
+  src: url('Agenda-LightItalic.woff') format('opentype'),
+    url('Agenda-LightItalic.ttf') format('truetype'),
+    url('Agenda-LightItalic.svg#Agenda-LightItalic') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Agenda-MediumExtraCondensed';
+  src: url('Agenda-MediumExtraCondensed.woff') format('opentype'),
+    url('Agenda-MediumExtraCondensed.ttf') format('truetype'),
+    url('Agenda-MediumExtraCondensed.svg#Agenda-MediumExtraCondensed') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* This CSS resource incorporates links to font software which is the
+   valuable copyrighted property of Type Network, Inc. and/or their
+   suppliers. You may not attempt to copy, install, redistribute,
+   convert, modify or reverse engineer this font software. Please
+   contact Type Network with any questions: www.typenetwork.com */
+
+@font-face {
+  font-family: 'Agenda-MediumUltraCondensed';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29750/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29750/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29750/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29750/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-RegularCondensedItalic';
+  font-weight: normal;
+  font-style: italic;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29805/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29805/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29805/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29805/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-Italic';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29804/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29804/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29804/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29804/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-SemiBoldUltraCondensed';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29803/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29803/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29803/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29803/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-RegularUltraCondensed';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29860/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29860/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29860/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29860/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-Regular';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29748/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29748/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29748/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29748/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-Bold';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29749/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29749/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29749/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29749/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-SemiBoldItalic';
+  font-weight: normal;
+  font-style: italic;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/30175/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/30175/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/30175/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/30175/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-SemiBold';
+  font-weight: normal;
+  font-style: normal;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29751/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29751/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29751/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29751/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}
+
+@font-face {
+  font-family: 'Agenda-MediumItalic';
+  font-weight: normal;
+  font-style: italic;
+
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29752/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13');
+  src: url('//cloud.typenetwork.com/projectLicenseWeb/29752/fontfile/eot/?b966ec8ef8d17d13dec45520be1d5bea203c5c13#iefix')
+      format('embedded-opentype'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29752/fontfile/woff2/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff2'),
+    url('//cloud.typenetwork.com/projectLicenseWeb/29752/fontfile/woff/?b966ec8ef8d17d13dec45520be1d5bea203c5c13')
+      format('woff');
+}

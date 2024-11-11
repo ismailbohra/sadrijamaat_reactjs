@@ -1,0 +1,152 @@
+@import url("../src/assets/fonts/fonts.scss");
+@import "./assets/icons/style.css";
+@import "./scss/colors";
+@import "./scss/variable";
+
+body {
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: 0;
+  .page-title {
+    font-family: "Montserrat", sans-serif;
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .text-center {
+    text-align: center;
+  }
+  .toptitle {
+    h1 {
+      color: #3a5998;
+      opacity: 0.1;
+      font-size: 7rem;
+      font-weight: 700;
+    }
+  }
+  .button-box {
+    width: 450px;
+    margin: auto;
+    @media screen and (max-width: 1400px) {
+      width: 380px;
+    }
+    @media screen and (max-width: 576px) {
+      width: 100%;
+    }
+  }
+  .b-n {
+    border: none;
+  }
+  .b-c-p {
+    border-color: #3a5998;
+  }
+  .waste-not-link {
+    color: $black;
+    cursor: pointer;
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    text-decoration: none;
+  }
+  ::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    background: $border-grey;
+  }
+  ::-webkit-scrollbar-thumb:window-inactive {
+    background: $border-grey;
+  }
+
+  .fw-700 {
+    font-weight: 700;
+  }
+
+  .link {
+    text-decoration: none;
+    color: black;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 19.5px;
+  }
+  .link:hover {
+    color: #3a5998;
+  }
+  .link-active {
+    color: #3a5998 !important;
+  }
+  .btn {
+    font-size: 13px;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    padding: 15px 20px;
+    background-color: #3a5998;
+    color: white;
+  }
+  .btn:hover {
+    color: #fff;
+  }
+
+  .curve-bg {
+    position: fixed;
+    width: 360px;
+    height: 140px;
+    background: #3a5998;
+    border-radius: 100% 0% 0% 0%;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  .sideContainer {
+    background-image: url("./assets/images/Rectangle-3.jpg");
+    background-repeat: no-repeat;
+    height: auto;
+    background-size: cover;
+  }
+  .logoText {
+    color: white;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 39px;
+  }
+  .imgTextDiv {
+    color: white;
+    font-family: "Montserrat", sans-serif;
+    margin-top: 100px;
+  }
+  .imgTexth1 {
+    color: white;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 39px;
+    align-content: center;
+  }
+  .imgText {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .toptitle {
+      h1 {
+        font-size: 4rem;
+      }
+    }
+  }
+  @media only screen and (min-width: 768px) {
+  }
+}
