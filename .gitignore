@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 uploads/
 .env
-servicAccountkey.json
+serviceAccountkey.json
