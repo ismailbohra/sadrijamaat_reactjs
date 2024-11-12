@@ -12,3 +12,13 @@ export const SKIP_THALI = [
     component: FMB_LD.ApplyForSkipThali,
   },
 ];
+export const CREATE_FMB_MENU = [
+  {
+    path: "",
+    component: FMB_LD.CreateMenuScreen,
+  },
+  {
+    path: "add-menu",
+    component: FMB_LD.AddMenuSceen,
+  },
+];

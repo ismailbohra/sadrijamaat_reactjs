@@ -1,6 +1,8 @@
 const express = require('express');
 const menuController = require('../controllers/fmbContorller');
 const { verifyToken } = require('../middelwares/Jwt');
+const validate = require('../middelwares/validate');
+const FmbValidation = require('../validations/FmbValidation');
 
 const router = express.Router();
 
@@ -38,7 +40,7 @@ const router = express.Router();
  *       201:
  *         description: The menu was successfully created
  */
-router.post('/menu', menuController.createMenu);
+router.post('/menu',validate(FmbValidation.createMenu), menuController.createMenu);
 
 /**
  * @swagger

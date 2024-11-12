@@ -4,6 +4,9 @@ import axiosInstance from "../../network/apis";
 export const applyRaza = async (payload) => {
   return await axiosInstance.post("/raza/applyraza", payload);
 };
+export const getMumineenById = async (payload) => {
+  return await axiosInstance.get("/user/getUserbyid/"+payload);
+};
 export const getRazaType = async (payload) => {
   return await axiosInstance.get(`/raza/manageRaza/getAll?${payload}`);
 };

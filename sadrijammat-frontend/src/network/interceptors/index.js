@@ -13,7 +13,7 @@ export const requestHandler = (request) => {
   if (authToken) {
     request.headers.Authorization = `Bearer ${authToken}`;
   }
-  console.log('New Req',request.baseURL)
+  console.log("New Req", request.baseURL);
   return request;
 };
 
@@ -22,7 +22,7 @@ export const successHandler = (response) => {
   if (responseType === "blob") {
     return { file: response.data, headers: response.headers };
   }
-  console.log('New Response')
+  console.log("New Response");
   return response.data;
 };
 
@@ -33,6 +33,8 @@ export const errorHandler = (error) => {
     if (Auth.isAuth) {
       Auth.signOut();
     }
+  } else {
+    dispatchToasterError(response?.data?.message);
   }
 
   return Promise.reject(error);

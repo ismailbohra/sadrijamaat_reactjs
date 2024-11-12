@@ -13,27 +13,27 @@ import axiosInstance from "../../network/apis";
 
 const ViewFmbMenuScreen = () => {
   const [menuData, setMenuData] = useState([
-    {
-      date: "2024-10-10",
-      occasion: "Eid-ul-Fitr",
-      menu: "Biryani, Salad, Dessert",
-    },
-    {
-      date: "2024-10-11",
-      occasion: "Jumuah",
-      menu: "Pulao, Raita, Sweets",
-    },
-    {
-      date: "2024-10-12",
-      occasion: "Normal Day",
-      menu: "Dal, Rice, Sabzi, Roti",
-    },
+    // {
+    //   date: "2024-10-10",
+    //   occasion: "Eid-ul-Fitr",
+    //   menu: "Biryani, Salad, Dessert",
+    // },
+    // {
+    //   date: "2024-10-11",
+    //   occasion: "Jumuah",
+    //   menu: "Pulao, Raita, Sweets",
+    // },
+    // {
+    //   date: "2024-10-12",
+    //   occasion: "Normal Day",
+    //   menu: "Dal, Rice, Sabzi, Roti",
+    // },
   ]);
 
   const fetchFmbMenu = async () => {
     try {
       const response = await axiosInstance.get("fmb/menu");
-    //   setMenuData(response.data);
+      setMenuData(response.data);
     } catch (error) {
       console.error("Error fetching menu data:", error);
     }

@@ -13,7 +13,9 @@ import approveRazaRoute from "./ApproveRazaRoute";
 import { bindActionCreators } from "redux";
 import MainScreen from "../Pages/MainScreen";
 import { connect } from "react-redux";
-import { FMB_MENU, SKIP_THALI } from "./FMBRoute";
+import { CREATE_FMB_MENU, FMB_MENU, SKIP_THALI } from "./FMBRoute";
+import { ASSIGN_ROLE } from "./AssingRoleRoute";
+import { MANAGE_ROLE } from "./ManageRole";
 
 const Routes = (props) => {
   let userType = Auth.getRoles();
@@ -50,6 +52,18 @@ const Routes = (props) => {
     {
       routeName: 'SKIP_THALI',
       routes: SKIP_THALI,
+    },
+    {
+      routeName: 'CREATE_FMB_MENU',
+      routes: CREATE_FMB_MENU,
+    },
+    {
+      routeName: 'ASSIGN_ROLE',
+      routes: ASSIGN_ROLE,
+    },
+    {
+      routeName: 'MANAGE_ROLE',
+      routes: MANAGE_ROLE,
     },
   ];
 

@@ -15,3 +15,6 @@ export const UPDATE_RAZA_RESP = "UPDATE_RAZA_RESP";
 
 export const DELETE_RAZA_REQ = "DELETE_RAZA_REQ";
 export const DELETE_RAZA_RESP = "DELETE_RAZA_RESP";
+
+export const GET_USER_REQ = "GET_USER_REQ";
+export const GET_USER_RESP = "GET_USER_RESP";
