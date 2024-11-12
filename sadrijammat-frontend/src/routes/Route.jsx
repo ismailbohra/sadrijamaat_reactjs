@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { CREATE_FMB_MENU, FMB_MENU, SKIP_THALI } from "./FMBRoute";
 import { ASSIGN_ROLE } from "./AssingRoleRoute";
 import { MANAGE_ROLE } from "./ManageRole";
+import { ANNOUNCEMENT } from "./AnnouncementRoute";
 
 const Routes = (props) => {
   let userType = Auth.getRoles();
@@ -64,6 +65,10 @@ const Routes = (props) => {
     {
       routeName: 'MANAGE_ROLE',
       routes: MANAGE_ROLE,
+    },
+    {
+      routeName: 'ANNOUNCEMENT',
+      routes: ANNOUNCEMENT,
     },
   ];
 
