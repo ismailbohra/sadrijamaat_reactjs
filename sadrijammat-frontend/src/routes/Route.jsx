@@ -18,6 +18,7 @@ import { ASSIGN_ROLE } from "./AssingRoleRoute";
 import { MANAGE_ROLE } from "./ManageRole";
 import { ANNOUNCEMENT } from "./AnnouncementRoute";
 import { MANAGE_RAZA } from "./ManageRazaRoute";
+import OverallRazaRoute from "./OverallRazaRoute";
 
 const Routes = (props) => {
   let userType = Auth.getRoles();
@@ -74,6 +75,10 @@ const Routes = (props) => {
     {
       routeName: 'MANAGE_RAZA',
       routes: MANAGE_RAZA,
+    },
+    {
+      routeName: 'OVERALL_RAZA',
+      routes: OverallRazaRoute,
     },
   ];
 
