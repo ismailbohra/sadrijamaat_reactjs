@@ -53,11 +53,11 @@ export const Dashboard = (props) => {
     APPLY_RAZA: { name: "My Raza", img: myraza },
     FMB_MENU: { name: "FMB Menu", img: foodMenu },
     EVENT_RSVP: { name: "Event RSVP", icon: <CalendarMonth /> },
-    // CHECK_THALI: { name: "Check Thali", img: checkthali },
+    CHECK_THALI: { name: "Check Thali", img: checkthali },
     ASSIGN_ROLE: { name: "Assign Role", img: assignrole },
     MANAGE_ROLE: { name: "Manage Role", img: manageRole },
     MANAGE_RAZA: { name: "Manage Raza", img: manageRaza },
-    // SKIP_THALI: { name: "Skip Thali", img: foodImage },
+    SKIP_THALI: { name: "Skip Thali", img: foodImage },
     ANNOUNCEMENT: { name: "Announcement", img: Announcement },
   };
 
