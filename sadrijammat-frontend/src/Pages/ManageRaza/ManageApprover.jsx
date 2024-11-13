@@ -1,119 +1,176 @@
-import {useIsFocused} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import {Button, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import DragList from 'react-native-draglist';
-import {Appbar} from 'react-native-paper';
-import axiosInstance from '../../utils/axios_instance';
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  IconButton,
+  Box,
+  AppBar,
+  Toolbar,
+  Button,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CheckIcon from "@mui/icons-material/Check";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useParams, useNavigate } from "react-router-dom";
+import { dispatchToasterSuccess } from "../../utils/Shared";
+import axiosInstance from "../../network/apis";
 
-const renderApprovalCard = ({item, onDragStart, onDragEnd, isActive}) => {
-  return (
-    <TouchableOpacity
-      style={[styles.approvalCard, {shadow: isActive ? 18 : 1}]}
-      onLongPress={onDragStart}
-      onPressOut={onDragEnd}
-      disabled={isActive}>
-      <Text style={styles.approverName}>{item}</Text>
-
-      <View style={styles.icons}>
-        <TouchableOpacity onPress={() => handleRemoveApprover(item)}>
-          <Text style={styles.text}>Remove</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const handleRemoveApprover = approverName => {
-  const updatedApprovers = razaData.approval_status.filter(
-    approver => approver !== approverName,
-  );
-  setRazaData(prev => ({...prev, approval_status: updatedApprovers}));
-};
-
-const ManageApprover = ({route, navigation}) => {
-  const {razaid} = route.params;
+const ManageApprover = () => {
+  const { razaid } = useParams();
   const [razaData, setRazaData] = useState(null);
-  const isFocused = useIsFocused();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosInstance.get(
-        `raza/manageRaza/getraza/${razaid}`,
-      );
-      setRazaData(response.data.data);
+      try {
+        const response = await axiosInstance.get(
+          `raza/manageRaza/getraza/${razaid}`
+        );
+        setRazaData(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
     fetchData();
-  }, [isFocused]);
+  }, [razaid]);
 
-  const onReorderedApprovalCard = (fromIndex, toIndex) => {
-    const updatedApprovalStatus = [...razaData.approval_status];
-    const movedItem = updatedApprovalStatus.splice(fromIndex, 1)[0];
-    updatedApprovalStatus.splice(toIndex, 0, movedItem);
-
-    setRazaData(prev => ({...prev, approval_status: updatedApprovalStatus}));
+  const handleRemoveApprover = (approverName) => {
+    const updatedApprovers = razaData.approval_status.filter(
+      (approver) => approver !== approverName
+    );
+    setRazaData((prev) => ({ ...prev, approval_status: updatedApprovers }));
   };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const updatedApprovalStatus = Array.from(razaData.approval_status);
+    const [movedItem] = updatedApprovalStatus.splice(result.source.index, 1);
+    updatedApprovalStatus.splice(result.destination.index, 0, movedItem);
+
+    setRazaData((prev) => ({
+      ...prev,
+      approval_status: updatedApprovalStatus,
+    }));
+  };
+
   const addNewApprover = () => {
-    navigation.navigate('AddApprover', {razaid: razaData._id,approvalStatus:razaData.approval_status});
+    navigate(`../add-approver/${razaid}`, {
+      state: { approvalStatus: razaData.approval_status },
+    });
   };
-  const handleupdate = async () => {
-    const updatedata = {
-      id: razaData._id,
+
+  const handleUpdate = async () => {
+    const updatedData = {
+      id: razaid,
       data: razaData,
     };
-    await axiosInstance
-      .put('raza/manageRaza', updatedata)
-      .then(e => showToast('success', 'Successfuly', 'Order Updated'))
-      .catch(e => console.log(e));
+
+    try {
+      await axiosInstance.put("raza/manageRaza", updatedData);
+      dispatchToasterSuccess("Order Updated");
+      navigate(-1)
+    } catch (error) {
+      console.error("Error updating approval status:", error);
+    }
   };
-  console.log('initial', razaData);
 
   return (
-    <>
-      <Appbar.Header style={{backgroundColor: '#FEF7E6'}}>
-        <Appbar.Content title="Manage Approver" color="#AD7E05" />
-        <Appbar.Action icon="plus" color="#AD7E05" onPress={addNewApprover} />
-        <Appbar.Action icon="check" color="#AD7E05" onPress={handleupdate} />
-      </Appbar.Header>
-      <View style={styles.container}>
-        <Text style={styles.title}>Manage Approval Status</Text>
-        <View style={styles.dragListContainer}>
-          {razaData &&
-          razaData.approval_status &&
-          razaData.approval_status.length > 0 ? (
-            <DragList
-              contentContainerStyle={{gap: 30}}
-              data={razaData.approval_status}
-              renderItem={renderApprovalCard}
-              keyExtractor={(item, index) => index.toString()}
-              onReordered={onReorderedApprovalCard}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <Text style={styles.emptyMessage}>
-              No approvers found, click '+' to add.
-            </Text>
-          )}
-        </View>
-      </View>
-    </>
+    <Box justifyContent={"center"}>
+      <Container maxWidth={"md"} sx={{ marginTop: 5 }}>
+        <Card>
+          <AppBar position="static" color="default">
+            <Toolbar>
+              <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+                Manage Approver
+              </Typography>
+              <IconButton color="primary" onClick={addNewApprover}>
+                <AddIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+
+          <Box
+            sx={{
+              padding: 2,
+            }}
+          >
+            {razaData &&
+            razaData.approval_status &&
+            razaData.approval_status.length > 0 ? (
+              <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="approverList">
+                  {(provided) => (
+                    <Box
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 2,
+                        padding: 2,
+                      }}
+                    >
+                      {razaData.approval_status.map((approver, index) => (
+                        <Draggable
+                          key={approver}
+                          draggableId={approver}
+                          index={index}
+                        >
+                          {(provided, snapshot) => (
+                            <Card
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              sx={{
+                                maxWidth: "100%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                boxShadow: snapshot.isDragging ? 10 : 1,
+                              }}
+                            >
+                              <CardContent sx={{ flexGrow: 1 }}>
+                                <Typography
+                                  variant="body1"
+                                  color="text.primary"
+                                >
+                                  {approver}
+                                </Typography>
+                              </CardContent>
+                              <IconButton
+                                onClick={() => handleRemoveApprover(approver)}
+                              >
+                                <DeleteIcon color="error" />
+                              </IconButton>
+                            </Card>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </Box>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            ) : (
+              <Typography variant="body1" color="text.secondary">
+                No approvers found. Click '+' to add.
+              </Typography>
+            )}
+          <Box justifyContent={"center"} display={"flex"} width={'100%'}>
+            <Button onClick={handleUpdate} variant="contained" color="success">
+              Done
+            </Button>
+          </Box>
+          </Box>
+        </Card>
+      </Container>
+    </Box>
   );
 };
 
 export default ManageApprover;
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, gap: 15},
-  title: {fontSize: 24, fontWeight: 'bold', color: 'black', marginBottom: 10},
-  dragListContainer: {flex: 1, paddingBottom: 10},
-  approvalCard: {
-    padding: 16,
-    backgroundColor: '#FEF7E6',
-    borderRadius: 20,
-    elevation: 2,
-    marginHorizontal: 2,
-    marginBottom: 8,
-  },
-  approverName: {fontSize: 18, fontWeight: 'bold', color: 'black'},
-  icons: {flexDirection: 'row', justifyContent: 'space-between'},
-  text: {color: 'black', marginVertical: 5},
-  emptyMessage: {fontSize: 16, color: 'gray'},
-});

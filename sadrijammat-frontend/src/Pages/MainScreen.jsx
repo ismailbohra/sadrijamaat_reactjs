@@ -44,7 +44,7 @@ export const Dashboard = (props) => {
     APPROVE_RAZA: { name: "Approve Raza", img: Approve },
     ADD_MUMINEEN: { name: "Add Mumineen", img: Addpeople },
     CREATE_FMB_MENU: { name: "Create FMB Menu", img: addmenu },
-    // OVERALL_RAZA: { name: "All Raza", img: allraza },
+    OVERALL_RAZA: { name: "All Raza", img: allraza },
     WAJEBAAT_APPOINTMENT: {
       name: "Wajebaat Appointment",
       icon: <CalendarMonth />,

@@ -30,7 +30,7 @@ const ManageRaza = () => {
   }, []);
 
   const handleEdit = (razaId) => {
-    navigate(`/manageRazaModify/${razaId}`);
+    navigate(`ModifyRazaType/${razaId}`);
   };
 
   const deleteRaza = async (razaId) => {

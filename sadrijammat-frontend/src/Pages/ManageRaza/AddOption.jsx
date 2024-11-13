@@ -1,35 +1,40 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
+  Container,
+  Typography,
+  TextField,
   Button,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import axiosInstance from '../../utils/axios_instance';
-import showToast from '../../utils/toast';
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  Divider,
+  Box,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate, useParams } from 'react-router-dom';
+import { dispatchToasterSuccess, dispatchToasterError } from '../../utils/Shared';
+import axiosInstance from '../../network/apis';
 
-const AddOption = ({route, navigation}) => {
-  const {razaid, field_id} = route.params; // Get razaid and field_id from params
+const AddOption = () => {
+  const { razaid, field_id } = useParams(); // Get razaid and field_id from params
   const [razaData, setRazaData] = useState(null);
   const [options, setOptions] = useState([]);
   const [optionLabel, setOptionLabel] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch entire razaData
     const fetchRazaData = async () => {
-      const response = await axiosInstance.get(
-        `raza/manageRaza/getraza/${razaid}`,
-      );
-      setRazaData(response.data.data);
-      const field = response.data.data.fields.find(
-        field => field._id === field_id,
-      );
-      if (field) {
-        setOptions(field.options || []); // Set existing options if available
+      try {
+        const response = await axiosInstance.get(`raza/manageRaza/getraza/${razaid}`);
+        setRazaData(response.data);
+        
+        const field = response.data.fields.find(field => field._id === field_id);
+        if (field) {
+          setOptions(field.options || []);
+        }
+      } catch (error) {
+        dispatchToasterError("Failed to fetch data");
       }
     };
     fetchRazaData();
@@ -37,102 +42,85 @@ const AddOption = ({route, navigation}) => {
 
   const handleAddOption = () => {
     if (!optionLabel) {
-      Alert.alert('Error', 'Option label cannot be empty');
+      dispatchToasterError("Option label cannot be empty");
       return;
     }
 
-    const newOption = {
-      label: optionLabel,
-      value: optionLabel,
-    };
-
-    // Update options state
+    const newOption = { label: optionLabel, value: optionLabel };
     setOptions([...options, newOption]);
     setOptionLabel(''); // Clear input after adding
   };
 
-  const handleRemoveOption = index => {
+  const handleRemoveOption = (index) => {
     const updatedOptions = options.filter((_, idx) => idx !== index);
     setOptions(updatedOptions);
   };
 
   const handleDone = async () => {
-    if (!razaData) return; // Ensure razaData is loaded
+    if (!razaData) return;
 
-    // Find and update the specific field's options
     const updatedFields = razaData.fields.map(field => {
       if (field._id === field_id) {
-        return {...field, options: options}; // Update options for the field
+        return { ...field, options };
       }
       return field;
     });
 
     const updatedRazaData = {
       id: razaData._id,
-      data: {
-        fields: updatedFields,
-      },
+      data: { fields: updatedFields },
     };
 
     try {
-      console.log(JSON.stringify(updatedRazaData));
-      await axiosInstance.put(`raza/manageRaza`, updatedRazaData).then(e => {
-        showToast('success', 'Successful', 'Option modified', 2000);
-        navigation.goBack();
-      });
+      await axiosInstance.put('raza/manageRaza', updatedRazaData);
+      dispatchToasterSuccess("Options updated successfully");
+      navigate(-1); // Go back
     } catch (error) {
-      showToast('Error', 'Error', 'Failed to update options', 2000);
+      dispatchToasterError("Failed to update options");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add Option</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter option label"
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Add Option
+      </Typography>
+      <TextField
+        label="Enter option label"
+        variant="outlined"
+        fullWidth
         value={optionLabel}
-        onChangeText={setOptionLabel}
+        onChange={(e) => setOptionLabel(e.target.value)}
+        sx={{ mb: 2 }}
       />
-      <Button title="Add Option" onPress={handleAddOption} />
+      <Button variant="contained" color="primary" onClick={handleAddOption} fullWidth>
+        Add Option
+      </Button>
 
-      <FlatList
-        data={options}
-        renderItem={({item, index}) => (
-          <View style={styles.optionItem}>
-            <Text style={styles.optionText}>{item.label}</Text>
-            <TouchableOpacity onPress={() => handleRemoveOption(index)}>
-              <Text style={styles.removeText}>Remove</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <List sx={{ mt: 2 }}>
+        {options.map((option, index) => (
+          <React.Fragment key={index}>
+            <ListItem
+              secondaryAction={
+                <IconButton edge="end" color="error" onClick={() => handleRemoveOption(index)}>
+                  <DeleteIcon />
+                </IconButton>
+              }
+            >
+              <ListItemText primary={option.label} />
+            </ListItem>
+            <Divider />
+          </React.Fragment>
+        ))}
+      </List>
 
-      <Button title="Done" onPress={handleDone} />
-    </View>
+      <Box sx={{ mt: 4 }}>
+        <Button variant="contained" color="success" fullWidth onClick={handleDone}>
+          Done
+        </Button>
+      </Box>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, gap: 20},
-  title: {fontSize: 24, fontWeight: 'bold', marginBottom: 10},
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginVertical: 8,
-    borderRadius: 5,
-  },
-  optionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  optionText: {fontSize: 18, color: 'black'},
-  removeText: {color: 'red'},
-});
 
 export default AddOption;

@@ -1,165 +1,130 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
-  View,
-  Text,
-  TextInput,
   Button,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
-import {Picker} from '@react-native-picker/picker'; // Import Picker component
-import axiosInstance from '../../utils/axios_instance';
-import {navigationRef} from '../../App';
+  Box,
+  TextField,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Container,
+  Paper,
+} from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../network/apis";
 
-const EditField = ({route, navigation}) => {
-  const {razaid, field} = route.params; // Field data and razaid passed via navigation
-  const [fieldName, setFieldName] = useState(field.name);
-  const [fieldType, setFieldType] = useState(field.type); // State for the picker
-  const [fieldOptions, setFieldOptions] = useState(field.options); // State for the picker
-  const [isRequired, setIsRequired] = useState(field.is_required);
+const EditField = () => {
+  const { razaid, fieldId } = useParams(); // assuming fieldId is passed via route params
+  const navigate = useNavigate();
+  const [fieldName, setFieldName] = useState("");
+  const [fieldType, setFieldType] = useState("text");
+  const [isRequired, setIsRequired] = useState(false);
   const [razaData, setRazaData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
-        `raza/manageRaza/getraza/${razaid}`,
+        `raza/manageRaza/getraza/${razaid}`
       );
-      setRazaData(response.data.data);
+      const field = response.data.fields.find((f) => f._id === fieldId);
+      setRazaData(response.data);
+      setFieldName(field?.name || "");
+      setFieldType(field?.type || "text");
+      setIsRequired(field?.is_required || false);
     };
     fetchData();
-  }, [razaid]);
+  }, [razaid, fieldId]);
 
   const handleSaveField = async () => {
-    const updateddata = {
-      id: razaid,
-      data: {
-        fields: razaData.fields.map(e =>
-          e._id === field._id
-            ? {
-                ...e,
-                name: fieldName,
-                type: fieldType,
-                is_required: isRequired,
-                options: fieldOptions,
-              }
-            : e,
-        ),
-      },
-    };
+    const updatedFields = razaData.fields.map((f) =>
+      f._id === fieldId
+        ? {
+            ...f,
+            name: fieldName,
+            type: fieldType,
+            is_required: isRequired,
+            options: fieldType == "select" ? [] : null,
+          }
+        : f
+    );
 
     try {
-      // API call to update the field by razaid and field id
-      await axiosInstance.put(`raza/manageRaza`, updateddata);
-
-      // On successful update, navigate back to ManageRaza screen
-      navigationRef.goBack();
+      await axiosInstance.put(`raza/manageRaza`, {
+        id: razaid,
+        data: { ...razaData, fields: updatedFields },
+      });
+      navigate(-1); // navigate back
     } catch (error) {
-      console.error('Failed to update field:', error);
+      console.error("Failed to update field:", error);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Field Name:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Field Name"
-        value={fieldName}
-        onChangeText={setFieldName}
-      />
+    <Container maxWidth="sm">
+      <Paper sx={{ padding: 4, marginTop: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          Edit Field
+        </Typography>
 
-      <Text style={styles.label}>Field Type:</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={fieldType}
-          onValueChange={itemValue => setFieldType(itemValue)}
-          style={styles.picker}>
-          <Picker.Item label="Text" value="text" />
-          <Picker.Item label="Select" value="select" />
-          <Picker.Item label="Number" value="number" />
-          <Picker.Item label="Date" value="date" />
-        </Picker>
-      </View>
-
-      <Text style={styles.label}>Is Required:</Text>
-      <View style={styles.radioGroup}>
-        <TouchableOpacity
-          style={styles.radioButton}
-          onPress={() => setIsRequired(true)}>
-          <View
-            style={[
-              styles.radioCircle,
-              isRequired === true && styles.selectedRadio,
-            ]}
-          />
-          <Text style={styles.radioLabel}>Yes</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.radioButton}
-          onPress={() => setIsRequired(false)}>
-          <View
-            style={[
-              styles.radioCircle,
-              isRequired === false && styles.selectedRadio,
-            ]}
-          />
-          <Text style={styles.radioLabel}>No</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.saveButton}>
-        <Button
-          title="Save Changes"
-          color="#AD7E05"
-          onPress={handleSaveField}
+        <TextField
+          fullWidth
+          label="Field Name"
+          variant="outlined"
+          value={fieldName}
+          onChange={(e) => setFieldName(e.target.value)}
+          sx={{ marginBottom: 2 }}
         />
-      </View>
-    </View>
+
+        <FormControl fullWidth variant="outlined" sx={{ marginBottom: 2 }}>
+          <InputLabel>Field Type</InputLabel>
+          <Select
+            label="Field Type"
+            value={fieldType}
+            onChange={(e) => setFieldType(e.target.value)}
+          >
+            <MenuItem value="text">Text</MenuItem>
+            <MenuItem value="select">Select</MenuItem>
+            <MenuItem value="number">Number</MenuItem>
+            <MenuItem value="date">Date</MenuItem>
+          </Select>
+        </FormControl>
+
+        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+          Is Required:
+        </Typography>
+        <RadioGroup
+          row
+          value={isRequired}
+          onChange={(e) => setIsRequired(e.target.value === "true")}
+        >
+          <FormControlLabel
+            value={true}
+            control={<Radio color="primary" />}
+            label="Yes"
+          />
+          <FormControlLabel
+            value={false}
+            control={<Radio color="primary" />}
+            label="No"
+          />
+        </RadioGroup>
+
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          onClick={handleSaveField}
+          sx={{ marginTop: 3 }}
+        >
+          Save Changes
+        </Button>
+      </Paper>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#FEF7E6'},
-  label: {fontSize: 16, fontWeight: 'bold', marginVertical: 8},
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    marginVertical: 8,
-    borderRadius: 8,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    marginVertical: 8,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
-  },
-  radioGroup: {flexDirection: 'row', alignItems: 'center', marginVertical: 12},
-  radioButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  radioCircle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#AD7E05',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  selectedRadio: {
-    backgroundColor: '#AD7E05',
-  },
-  radioLabel: {fontSize: 16},
-  saveButton: {marginTop: 20},
-});
 
 export default EditField;

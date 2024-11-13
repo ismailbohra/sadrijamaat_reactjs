@@ -1,198 +1,202 @@
-import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
-import DragList from 'react-native-draglist';
-import { Appbar, Menu } from 'react-native-paper';
-import { navigationRef } from '../../App';
-import axiosInstance from '../../utils/axios_instance';
+  Box,
+  Typography,
+  Menu,
+  MenuItem,
+  IconButton,
+  Paper,
+  Tooltip,
+  Container,
+  Card,
+} from "@mui/material";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useParams, useNavigate } from "react-router-dom";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import axiosInstance from "../../network/apis";
+import { dispatchToasterSuccess } from "../../utils/Shared";
 
-const ManageRazaFields = ({route, navigation}) => {
-  const {razaid} = route.params;
+const ManageRazaFields = () => {
+  const { razaid } = useParams();
   const [razaData, setRazaData] = useState(null);
-  const isFocused = useIsFocused();
-
-
-  const [visible, setVisible] = useState(false);
-
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
-
-  const handleupdate = async () => {
-    const updatedata = {
-      id: razaData._id,
-      data: razaData,
-    };
-    closeMenu()
-    await axiosInstance
-      .put('raza/manageRaza', updatedata)
-      .then(e => showToast('success', 'Successfuly', 'Order Updated'));
-  };
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await axiosInstance.get(
-        `raza/manageRaza/getraza/${razaid}`,
+        `raza/manageRaza/getraza/${razaid}`
       );
-      setRazaData(response.data.data);
+      setRazaData(response.data);
     };
     fetchData();
-  }, [isFocused]);
+  }, [razaid]);
 
-  const handleAddOption = field_id => {
-    console.log(field_id);
-    navigation.navigate('AddOption', {razaid, field_id});
+  const handleUpdate = async (updatedFields) => {
+    const updatedData = { id: razaData._id, data: { ...razaData, fields: updatedFields } };
+    setAnchorEl(null);
+    await axiosInstance.put("raza/manageRaza", updatedData);
+    dispatchToasterSuccess("Order Updated");
   };
 
-  const handleRemoveField = async field_id => {
-    const updatedFields = razaData.fields.filter(
-      field => field._id !== field_id,
-    );
-    setRazaData(prev => ({...prev, fields: updatedFields}));
-
-    const updatedRazaData = {
-      id: razaData._id,
-      data: {...razaData, fields: updatedFields},
-    };
-    handleupdate();
+  const handleAddOption = (fieldId) => {
+    navigate(`../add-option/${razaid}/${fieldId}`);
   };
 
-  const renderFieldCard = ({item, onDragStart, onDragEnd, isActive}) => {
-    return (
-      <TouchableOpacity
-        style={[styles.fieldCard, {shadow: isActive ? 18 : 1}]}
-        onLongPress={onDragStart}
-        onPressOut={onDragEnd}
-        disabled={isActive}>
-        <Text style={styles.fieldName}>{item.name}</Text>
-        <Text style={styles.text}>
-          {item.is_required ? 'Required' : 'Optional'}
-        </Text>
-        <Text style={[styles.text, {fontWeight: 'bold'}]}>{item.type}</Text>
-        {/* Show add options UI if field type is select */}
-        {item.type === 'select' && (
-          <View>
-            {item.options &&
-              item.options.map((option, index) => (
-                <Text style={styles.optiontext} key={index}>
-                  {option.label}
-                </Text>
-              ))}
-            <View style={{marginVertical: 15}}>
-              <Button
-                title="Add/Modify Option"
-                color="#AD7E05"
-                onPress={() => handleAddOption(item._id)}
-              />
-            </View>
-          </View>
-        )}
-        {/* Edit and Remove buttons */}
-        <View style={styles.icons}>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('EditField', {field: item, razaid: razaid})
-            }>
-            <Text style={styles.text}>Edit</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleRemoveField(item._id)}>
-            <Text style={styles.text}>Remove</Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-    );
+  const handleRemoveField = async (fieldId) => {
+    let confirm = window.confirm("Do you want to remove this field");
+    if (confirm) {
+      const updatedFields = razaData.fields.filter(
+        (field) => field._id !== fieldId
+      );
+      setRazaData({ ...razaData, fields: updatedFields });
+      handleUpdate(updatedFields);
+    }
   };
 
-  async function onReordered(fromIndex, toIndex) {
-    const copy = [...razaData.fields];
-    const removed = copy.splice(fromIndex, 1);
-    
-    copy.splice(toIndex, 0, removed[0]);
-    setRazaData(e => ({...e, fields: copy}));
-  }
-  const AddField = () => {
-    closeMenu()
-    navigationRef.navigate('AddField', {razaid: razaid});
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
-  
 
-
-  const ManageApprover = () => {
-    closeMenu()
-    navigation.navigate('ManageApprover', { razaid });
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
- 
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(razaData.fields);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setRazaData((prev) => ({ ...prev, fields: items }));
+  };
 
   return (
-    <>
-    <Appbar.Header style={{ backgroundColor: '#FEF7E6' }}>
-      <Appbar.Content title="Sadri Jamaat" color="#AD7E05" />
-      <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        anchor={
-          <Appbar.Action
-            icon="dots-vertical"
-            onPress={openMenu}
-            color="#AD7E05"
-          />
-        }>
-        <Menu.Item title="Add Fields" leadingIcon="plus" onPress={AddField} />
-        <Menu.Item
-          title="Manage Approver"
-          leadingIcon="lock-reset"
-          onPress={ManageApprover}
-        />
-        <Menu.Item title="Update" leadingIcon="check" onPress={handleupdate} />
-      </Menu>
-    </Appbar.Header>
+    <Container maxWidth="md">
+      <Card sx={{ marginTop: 5 }}>
+        <Box display="flex" alignItems="center" bgcolor="#FEF7E6" px={2} py={1}>
+          <Typography variant="h6" color="#AD7E05">
+            {razaData?.name}
+          </Typography>
+          <IconButton onClick={handleMenuClick} sx={{ ml: "auto" }}>
+            <MoreVertIcon color="primary" />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={() => navigate(`../add-field/${razaid}`)}>
+              Add Fields
+            </MenuItem>
+            <MenuItem onClick={() => navigate(`../manage-approver/${razaid}`)}>
+              Manage Approver
+            </MenuItem>
+            <MenuItem onClick={handleUpdate}>Update</MenuItem>
+          </Menu>
+        </Box>
 
-    <View style={styles.container}>
-      <Text style={styles.title}>Manage Raza Fields</Text>
-      <View style={styles.dragListContainer}>
-        {razaData && razaData.fields && razaData.fields.length > 0 ? (
-          <DragList
-            contentContainerStyle={{ gap: 20 }}
-            data={razaData.fields}
-            renderItem={renderFieldCard}
-            keyExtractor={item => item._id}
-            onReordered={onReordered}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <Text style={styles.emptyMessage}>Please Add Fields To Raza</Text>
-        )}
-      </View>
-    </View>
-  </>
+        <Box p={3}>
+          {razaData && razaData.fields && razaData.fields.length > 0 ? (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="fields">
+                {(provided) => (
+                  <Box
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    sx={{ gap: 2 }}
+                  >
+                    {razaData.fields.map((field, index) => (
+                      <Draggable
+                        key={field._id}
+                        draggableId={field._id}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <Paper
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            elevation={snapshot.isDragging ? 8 : 2}
+                            sx={{
+                              p: 2,
+                              mb: 2,
+                              backgroundColor: "#FEF7E6",
+                              display: "flex",
+                              flexDirection: "column",
+                              borderRadius: 2,
+                            }}
+                          >
+                            <Box
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                            >
+                              <Typography variant="h6">{field.name}</Typography>
+                              <Tooltip title="Drag to reorder">
+                                <DragIndicatorIcon />
+                              </Tooltip>
+                            </Box>
+                            <Typography variant="body2">
+                              {field.is_required ? "Required" : "Optional"}
+                            </Typography>
+                            <Typography variant="body2" fontWeight="bold">
+                              {field.type}
+                            </Typography>
+
+                            {field.type === "select" && (
+                              <Box mt={2}>
+                                {field.options?.map((option, idx) => (
+                                  <Typography key={idx} sx={{ ml: 2 }}>
+                                    {option.label}
+                                  </Typography>
+                                ))}
+                                <Button
+                                  variant="contained"
+                                  color="primary"
+                                  onClick={() => handleAddOption(field._id)}
+                                  sx={{ mt: 1 }}
+                                >
+                                  Add/Modify Option
+                                </Button>
+                              </Box>
+                            )}
+                            <Box display="flex" gap={2} mt={2}>
+                              <Button
+                                variant="outlined"
+                                onClick={() =>
+                                  navigate(`../edit-field/${razaid}/${field._id}`)
+                                }
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleRemoveField(field._id)}
+                              >
+                                Remove
+                              </Button>
+                            </Box>
+                          </Paper>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </Box>
+                )}
+              </Droppable>
+            </DragDropContext>
+          ) : (
+            <Typography variant="body1" color="textSecondary">
+              Please Add Fields To Raza
+            </Typography>
+          )}
+        </Box>
+      </Card>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, gap: 15},
-  title: {fontSize: 24, fontWeight: 'bold', color: 'black', marginBottom: 10},
-  dragListContainer: {
-    flex: 1,
-    paddingBottom: 10,
-  },
-  fieldCard: {
-    padding: 16,
-    backgroundColor: '#FEF7E6',
-    borderRadius: 20,
-    elevation: 2,
-    marginHorizontal: 2,
-    marginBottom: 8,
-  },
-  fieldName: {fontSize: 18, fontWeight: 'bold', color: 'black'},
-  icons: {flexDirection: 'row', justifyContent: 'space-between'},
-  text: {color: 'black', marginVertical: 5},
-  optiontext: {color: 'black', marginLeft: 10, marginVertical: 5},
-  approverName: { fontSize: 18, fontWeight: 'bold', color: 'black' },
-});
 
 export default ManageRazaFields;

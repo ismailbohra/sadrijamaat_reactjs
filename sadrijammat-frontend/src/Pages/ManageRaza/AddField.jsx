@@ -1,25 +1,40 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
-import {navigationRef} from '../../App';
-import {RadioButton} from 'react-native-paper'; // Import RadioButton
-import {Picker} from '@react-native-picker/picker'; // Import Picker
-import axiosInstance from '../../utils/axios_instance';
-import showToast from '../../utils/toast'
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel,
+  Box,
+} from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { dispatchToasterSuccess } from '../../utils/Shared';
+import axiosInstance from '../../network/apis';
 
-const AddField = ({route}) => {
-  const {razaid} = route.params;
+
+const AddField = () => {
+  const { razaid } = useParams();
   const [fieldName, setFieldName] = useState('');
   const [fieldType, setFieldType] = useState('text'); // Default to 'text'
   const [isRequired, setIsRequired] = useState(false);
-
   const [razaData, setRazaData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosInstance.get(
-        `raza/manageRaza/getraza/${razaid}`,
-      );
-      setRazaData(response.data.data);
+      try {
+        const response = await axiosInstance.get(`raza/manageRaza/getraza/${razaid}`);
+        setRazaData(response.data);
+      } catch (error) {
+        console.error('Error fetching Raza data:', error);
+      }
     };
     fetchData();
   }, [razaid]);
@@ -28,95 +43,73 @@ const AddField = ({route}) => {
     const newField = {
       name: fieldName,
       type: fieldType,
-      is_required:isRequired,
+      is_required: isRequired,
       options: fieldType === 'select' ? [] : null,
     };
-    const udpatedData = {
+
+    const updatedData = {
       id: razaData._id,
-      data: {
-        fields: [...razaData.fields, newField],
-      },
+      data: { fields: [...razaData.fields, newField] },
     };
-    await axiosInstance.put('raza/manageRaza', udpatedData).then((e)=>{ 
-        showToast('success','Successfull','New Field Added',2000)
-        navigationRef.goBack()});
+
+    try {
+      await axiosInstance.put('raza/manageRaza', updatedData);
+      dispatchToasterSuccess('Success', 'New field added');
+      navigate(-1); // Go back to previous page
+    } catch (error) {
+      console.error('Error updating fields:', error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Field Name"
-        placeholderTextColor="#888"
+    <Container maxWidth="sm" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>
+        Add New Field
+      </Typography>
+
+      <TextField
+        label="Field Name"
+        variant="outlined"
+        fullWidth
         value={fieldName}
-        onChangeText={setFieldName}
+        onChange={(e) => setFieldName(e.target.value)}
+        sx={{ mb: 2 }}
       />
 
-      <Text style={styles.label}>Field Type:</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={fieldType}
-          style={styles.picker}
-          onValueChange={itemValue => setFieldType(itemValue)}>
-          <Picker.Item label="Text" value="text" />
-          <Picker.Item label="Select" value="select" />
-          <Picker.Item label="Number" value="number" />
-          <Picker.Item label="Date" value="date" />
+      <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel>Field Type</InputLabel>
+        <Select
+          value={fieldType}
+          label="Field Type"
+          onChange={(e) => setFieldType(e.target.value)}
+        >
+          <MenuItem value="text">Text</MenuItem>
+          <MenuItem value="select">Select</MenuItem>
+          <MenuItem value="number">Number</MenuItem>
+          <MenuItem value="date">Date</MenuItem>
           {/* Add more field types as needed */}
-        </Picker>
-      </View>
+        </Select>
+      </FormControl>
 
-      <Text style={styles.label}>Is Required:</Text>
-      <View style={styles.radioContainer}>
-        <Text style={{color: 'black'}}>Yes</Text>
-        <RadioButton
-          value="yes"
-          status={isRequired ? 'checked' : 'unchecked'}
-          onPress={() => setIsRequired(true)}
-        />
-        <Text style={{color: 'black'}}>No</Text>
-        <RadioButton
-          value="no"
-          status={!isRequired ? 'checked' : 'unchecked'}
-          onPress={() => setIsRequired(false)}
-        />
-      </View>
+      <FormControl component="fieldset" sx={{ mb: 2 }}>
+        <FormLabel component="legend">Is Required?</FormLabel>
+        <RadioGroup
+          row
+          value={isRequired ? 'yes' : 'no'}
+          onChange={(e) => setIsRequired(e.target.value === 'yes')}
+        >
+          <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+          <FormControlLabel value="no" control={<Radio />} label="No" />
+        </RadioGroup>
+      </FormControl>
 
-      <Button title="Done" onPress={handleAddField} />
-    </View>
+      <Box mt={2}>
+        <Button variant="contained" color="primary" fullWidth onClick={handleAddField}>
+          Done
+        </Button>
+      </Box>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, gap: 5},
-  label: {color: 'black', marginVertical: 8},
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 8,
-    marginVertical: 8,
-    color: 'black',
-    borderRadius: 15,
-    paddingLeft: 15,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 15,
-    overflow: 'hidden',
-    marginVertical: 8,
-  },
-  picker: {
-    // height: 50,
-    width: '100%',
-    color: 'black',
-  },
-  radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 8,
-    gap: 5,
-  },
-});
 
 export default AddField;
