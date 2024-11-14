@@ -49,7 +49,7 @@ export const Dashboard = (props) => {
       name: "Wajebaat Appointment",
       icon: <CalendarMonth />,
     },
-    // MUMINEEN_DIRECTORY: { name: "Mumineen Directory", img: users },
+    MUMINEEN_DIRECTORY: { name: "Mumineen Directory", img: users },
     APPLY_RAZA: { name: "My Raza", img: myraza },
     FMB_MENU: { name: "FMB Menu", img: foodMenu },
     EVENT_RSVP: { name: "Event RSVP", icon: <CalendarMonth /> },

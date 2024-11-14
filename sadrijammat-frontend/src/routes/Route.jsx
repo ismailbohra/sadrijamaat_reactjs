@@ -19,6 +19,7 @@ import { MANAGE_ROLE } from "./ManageRole";
 import { ANNOUNCEMENT } from "./AnnouncementRoute";
 import { MANAGE_RAZA } from "./ManageRazaRoute";
 import OverallRazaRoute from "./OverallRazaRoute";
+import { AddMumineenRoute, MumineenDirectoryRoute } from "./MumineenDirectoryRoute";
 
 const Routes = (props) => {
   let userType = Auth.getRoles();
@@ -79,6 +80,14 @@ const Routes = (props) => {
     {
       routeName: 'OVERALL_RAZA',
       routes: OverallRazaRoute,
+    },
+    {
+      routeName: 'MUMINEEN_DIRECTORY',
+      routes: MumineenDirectoryRoute,
+    },
+    {
+      routeName: 'ADD_MUMINEEN',
+      routes: AddMumineenRoute,
     },
   ];
 

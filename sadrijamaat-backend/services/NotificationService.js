@@ -15,12 +15,13 @@ const sendTopicNotification = async (topics, title, body) => {
   try {
     Promise.all(
       topics.map(async (topic) => {
+        const formattedTopic = topic.trim().replace(/\s+/g, '_');
         const message = {
           notification: {
             title,
             body,
           },
-          topic,
+          topic:formattedTopic,
         };
         const response = await admin.messaging().send(message);
         const notification = new Notification({
