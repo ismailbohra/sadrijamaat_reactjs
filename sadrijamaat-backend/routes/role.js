@@ -43,6 +43,25 @@ router.get('/:id', roleController.getRoleById);
 
 /**
  * @swagger
+ * /roles/removeRoleFromAllUsers/{role}:
+ *   get:
+ *     summary: removeRoleFromAllUsers
+ *     tags: [Role]
+ *     parameters:
+ *       - in: path
+ *         name: role
+ *         required: true
+ *         description: Role name
+ *     responses:
+ *       200:
+ *         description: The role data
+ *       404:
+ *         description: Role not found
+ */
+router.get('/removeRoleFromAllUsers/:role', roleController.removeRoleFromAllUsers);
+
+/**
+ * @swagger
  * /roles:
  *   post:
  *     summary: Create a new role

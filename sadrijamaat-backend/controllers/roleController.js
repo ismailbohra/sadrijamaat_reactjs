@@ -37,6 +37,24 @@ const getAllRoles = async (req, res) => {
   }
 };
 
+const removeRoleFromAllUsers = async (req, res) => {
+  try {
+    const {role} = req.params
+    const roles = await roleService.removeRoleFromAllUsers(role);
+    res.status(200).json({
+      status: 200,
+      message: "Success",
+      data: roles,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: error.message,
+      data: {},
+    });
+  }
+};
+
 // Get a Role by ID
 const getRoleById = async (req, res) => {
   try {
@@ -118,4 +136,5 @@ module.exports = {
   getRoleById,
   updateRoleById,
   deleteRoleById,
+  removeRoleFromAllUsers
 };
