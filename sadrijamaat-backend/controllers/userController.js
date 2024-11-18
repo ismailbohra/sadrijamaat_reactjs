@@ -58,9 +58,9 @@ const login = catchAsync(async (req, res) => {
   }
 });
 const forgotPassword = catchAsync(async (req, res) => {
-  const { email } = req.body;
+  const { its } = req.body;
   try {
-    await userService.forgotPassword(email);
+    await userService.forgotPassword(its);
     res
       .status(httpStatus.OK)
       .send(
@@ -79,7 +79,7 @@ const changePassword = catchAsync(async (req, res) => {
   const { oldpassword, newpassword } = req.body;
   try {
     const user = req.user;
-    const userId = user._id
+    const userId = user._id;
     await userService.changePassword(userId, oldpassword, newpassword);
     res
       .status(httpStatus.OK)
@@ -87,6 +87,23 @@ const changePassword = catchAsync(async (req, res) => {
         successResponseGenerator(httpStatus.OK, "Password Changed Successfully")
       );
   } catch (error) {
+    res
+      .status(error.statusCode)
+      .send(errorResponse(error.statusCode, error.message));
+  }
+});
+const logout = catchAsync(async (req, res) => {
+  const user = req.user;
+  const userId = user._id;
+  try {
+    const user = await userService.logout(userId);
+    res
+      .status(httpStatus.OK)
+      .send(
+        successResponseGenerator(httpStatus.OK, "logout Successful", user)
+      );
+  } catch (error) {
+    console.log(error);
     res
       .status(error.statusCode)
       .send(errorResponse(error.statusCode, error.message));
@@ -128,15 +145,13 @@ const verifyToken = catchAsync(async (req, res) => {
     const tokenExpiringAt = moment().add(30, "seconds").unix();
     const user = await userService.getUser(req.user._id);
     const token = jwtEncode(user);
-    res
-      .status(httpStatus.OK)
-      .send(
-        successResponseGenerator(httpStatus.OK, "verified Successful", {
-          user,
-          token,
-          tokenExpiringAt,
-        })
-      );
+    res.status(httpStatus.OK).send(
+      successResponseGenerator(httpStatus.OK, "verified Successful", {
+        user,
+        token,
+        tokenExpiringAt,
+      })
+    );
   } catch (error) {
     console.log(error);
     res
@@ -225,4 +240,5 @@ module.exports = {
   assignRole,
   removeRole,
   updateFcmToken,
+  logout
 };

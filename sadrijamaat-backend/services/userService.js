@@ -8,7 +8,18 @@ const sendEmail = require("../middelwares/email");
 
 const registerUser = async (userBody) => {
   try {
-    const { name, email, role, hof, is_hof, its,address,is_mehman,contact,sector } = userBody;
+    const {
+      name,
+      email,
+      role,
+      hof,
+      is_hof,
+      its,
+      address,
+      is_mehman,
+      contact,
+      sector,
+    } = userBody;
 
     // const existingUser = await User.findOne({ email });
     // if (existingUser) {
@@ -32,7 +43,7 @@ const registerUser = async (userBody) => {
       address,
       is_mehman,
       contact,
-      sector
+      sector,
     });
 
     const templatePath = "./EmailTemplates/UserRegistration.html";
@@ -192,6 +203,24 @@ const getUser = async (userId) => {
   }
 };
 
+const logout = async (userId) => {
+  try {
+    if (!userId) {
+      throw new ApiError(httpStatus.NOT_FOUND, "userId Not Found");
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    }
+    user.fcmToken = undefined;
+    await user.save();
+    return user;
+  } catch (error) {
+    console.error("get user service has error", error.message);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
+};
+
 const getAllUsers = async () => {
   try {
     const users = await User.find();
@@ -254,22 +283,31 @@ const removeRole = async (req, res) => {
     const { userid, rolename } = req.query;
 
     if (!userid || !rolename) {
-      throw new ApiError(httpStatus.NOT_FOUND, "User ID and role name are required");
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        "User ID and role name are required"
+      );
     }
-    
+
     const user = await User.findById(userid);
     if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, `User with ID ${userid} not found`);
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        `User with ID ${userid} not found`
+      );
     }
-    
+
     const roleIndex = user.role.indexOf(rolename);
     if (roleIndex === -1) {
-      throw new ApiError(httpStatus.NOT_FOUND, `Role ${rolename} not found for this user`);
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        `Role ${rolename} not found for this user`
+      );
     }
-    
+
     user.role.splice(roleIndex, 1);
     await user.save(); // Save the updated user document
-    
+
     return { message: `Role ${rolename} removed successfully from user` };
   } catch (error) {
     console.error("Error removing role:", error);
@@ -282,7 +320,7 @@ const updateFcmToken = async (userId, fcmToken) => {
     const user = await User.findById(userId);
 
     if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND,"User not found")
+      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     }
 
     user.fcmToken = fcmToken;
@@ -305,5 +343,6 @@ module.exports = {
   searchUsers,
   assignRole,
   removeRole,
-  updateFcmToken
+  updateFcmToken,
+  logout,
 };

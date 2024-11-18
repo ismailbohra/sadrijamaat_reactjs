@@ -101,6 +101,27 @@ router.route('/login').post(limiter, validate(userValidation.login), userControl
 
 /**
  * @swagger
+ * /user/logout:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: logout user
+ *     security:
+ *       - ApiKeyAuth: []
+ *     responses:
+ *       '200':
+ *         description: successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.route('/logout').get(verifyToken, userController.logout);
+
+/**
+ * @swagger
  * /user/forgotpassword:
  *   post:
  *     tags:
@@ -385,8 +406,8 @@ router.post('/updateFcmToken', userController.updateFcmToken);
 *      ForgotPsd:
 *        type: object
 *        properties:
-*          email:
-*            type: string
+*          its:
+*            type: integer
 *      ChangePsd:
 *        type: object
 *        properties:

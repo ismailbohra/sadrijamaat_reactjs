@@ -31,7 +31,7 @@ const login = {
 };
 const forgotPassword = {
   body: Joi.object().keys({
-    email: Joi.string().required().email().messages(validEmail("Email")),
+    its: Joi.number().required(),
   }),
 };
 const changePassword = {
