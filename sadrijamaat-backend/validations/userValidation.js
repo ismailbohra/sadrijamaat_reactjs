@@ -16,16 +16,20 @@ const registerUser = {
     its: Joi.number().required(),
     hof: Joi.number().required(),
     is_hof: Joi.boolean().required(),
-    is_mehman:Joi.boolean(),
-    address:Joi.string(),
-    contact:Joi.number().min(1111111111).max(9999999999),
-    sector:Joi.string()
+    is_mehman: Joi.boolean(),
+    address: Joi.string(),
+    contact: Joi.number().min(1111111111).max(9999999999),
+    sector: Joi.string(),
   }),
 };
 
 const login = {
   body: Joi.object().keys({
-    its: Joi.number().required().min(11111111).max(99999999).messages(validEmail("ITS")),
+    its: Joi.number().required().min(11111111).max(99999999).messages({
+      "any.required": "ITS number is required.",
+      "number.min": "Invalid ITS number.",
+      "number.max": "Invalid ITS number.",
+    }),
     password: Joi.string().required(),
   }),
 };
@@ -43,7 +47,7 @@ const changePassword = {
 const updateUser = {
   body: Joi.object().keys({
     id: Joi.string(),
-    data:Joi.object()
+    data: Joi.object(),
   }),
 };
 const getUser = Joi.object({
