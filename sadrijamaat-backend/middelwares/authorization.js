@@ -3,9 +3,7 @@ const JWT_EXPIRY = process.env.JWT_EXPIRY;
 const JWT_SECRET_CODE = process.env.JWT_SECRET;
 
 const jwtEncode = (user) => {
-  return jwt.sign({user}, JWT_SECRET_CODE, {
-    expiresIn: JWT_EXPIRY,
-  });
+  return jwt.sign({user}, JWT_SECRET_CODE);
 };
 
 const jwtDecode = (token) => {
