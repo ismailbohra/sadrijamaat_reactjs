@@ -2,6 +2,11 @@ const { Schema, model } = require("mongoose");
 
 const RazaTypeSchema = new Schema(
   {
+    tempId: {
+      type: Number,
+      required: true,
+      unique:true
+    },
     name: {
       type: String,
       required: true,

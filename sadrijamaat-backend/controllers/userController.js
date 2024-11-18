@@ -78,7 +78,9 @@ const forgotPassword = catchAsync(async (req, res) => {
 const changePassword = catchAsync(async (req, res) => {
   const { oldpassword, newpassword } = req.body;
   try {
-    await userService.changePassword(req.userId, oldpassword, newpassword);
+    const user = req.user;
+    const userId = user._id
+    await userService.changePassword(userId, oldpassword, newpassword);
     res
       .status(httpStatus.OK)
       .send(

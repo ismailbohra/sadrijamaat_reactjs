@@ -35,4 +35,29 @@ const upload = require('../utils/multer');
  */
 router.post('/upload-csv', upload.single('file'), bulkUploadController.uploadCSV);
 
+/**
+ * @swagger
+ * /bulkUpload/upload-razatype:
+ *   post:
+ *     tags: [Bulk Upload]
+ *     summary: Upload a sql file to add users
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Users added successfully
+ *       500:
+ *         description: Internal server error
+ */
+router.post('/upload-razatype', upload.single('file'), bulkUploadController.uploadRazatypeSql);
+
+
 module.exports = router;
