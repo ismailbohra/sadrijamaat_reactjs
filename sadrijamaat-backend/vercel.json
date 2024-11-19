@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "projects": {
-    "name": "sadrijamaat-backend",
-    "framework": null
-  },
   "builds": [
     {
       "src": "sadrijamaat_backend/index.js",
