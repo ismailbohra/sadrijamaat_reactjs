@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "sadrijamaat_backend/index.js",
+      "src": "sadrijamaat-backend/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "sadrijamaat_backend/index.js"
+      "dest": "sadrijamaat-backend/index.js"
     }
   ]
 }
