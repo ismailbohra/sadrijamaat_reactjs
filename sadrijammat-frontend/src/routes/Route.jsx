@@ -1,7 +1,11 @@
 import PropTypes from "prop-types";
 import React, { Suspense, useEffect } from "react";
 import { useLocation } from "react-router";
-import { Route, Routes as ReactRouterRoutes, useNavigate } from "react-router-dom";
+import {
+  Route,
+  Routes as ReactRouterRoutes,
+  useNavigate,
+} from "react-router-dom";
 import Loader from "../components/Loader";
 import Auth from "../utils/Auth";
 import PrivateRoute from "../utils/PrivateRoutes";
@@ -19,7 +23,11 @@ import { MANAGE_ROLE } from "./ManageRole";
 import { ANNOUNCEMENT } from "./AnnouncementRoute";
 import { MANAGE_RAZA } from "./ManageRazaRoute";
 import OverallRazaRoute from "./OverallRazaRoute";
-import { AddMumineenRoute, MumineenDirectoryRoute } from "./MumineenDirectoryRoute";
+import {
+  AddMumineenRoute,
+  MumineenDirectoryRoute,
+} from "./MumineenDirectoryRoute";
+import ChangePassword from "../Pages/Auth/ChangePassword";
 
 const Routes = (props) => {
   let userType = Auth.getRoles();
@@ -42,51 +50,51 @@ const Routes = (props) => {
 
   const Modules = [
     {
-      routeName: 'APPLY_RAZA',
+      routeName: "APPLY_RAZA",
       routes: applyRazaRoutes,
     },
     {
-      routeName: 'APPROVE_RAZA',
+      routeName: "APPROVE_RAZA",
       routes: approveRazaRoute,
     },
     {
-      routeName: 'FMB_MENU',
+      routeName: "FMB_MENU",
       routes: FMB_MENU,
     },
     {
-      routeName: 'SKIP_THALI',
+      routeName: "SKIP_THALI",
       routes: SKIP_THALI,
     },
     {
-      routeName: 'CREATE_FMB_MENU',
+      routeName: "CREATE_FMB_MENU",
       routes: CREATE_FMB_MENU,
     },
     {
-      routeName: 'ASSIGN_ROLE',
+      routeName: "ASSIGN_ROLE",
       routes: ASSIGN_ROLE,
     },
     {
-      routeName: 'MANAGE_ROLE',
+      routeName: "MANAGE_ROLE",
       routes: MANAGE_ROLE,
     },
     {
-      routeName: 'ANNOUNCEMENT',
+      routeName: "ANNOUNCEMENT",
       routes: ANNOUNCEMENT,
     },
     {
-      routeName: 'MANAGE_RAZA',
+      routeName: "MANAGE_RAZA",
       routes: MANAGE_RAZA,
     },
     {
-      routeName: 'OVERALL_RAZA',
+      routeName: "OVERALL_RAZA",
       routes: OverallRazaRoute,
     },
     {
-      routeName: 'MUMINEEN_DIRECTORY',
+      routeName: "MUMINEEN_DIRECTORY",
       routes: MumineenDirectoryRoute,
     },
     {
-      routeName: 'ADD_MUMINEEN',
+      routeName: "ADD_MUMINEEN",
       routes: AddMumineenRoute,
     },
   ];
@@ -94,13 +102,20 @@ const Routes = (props) => {
   return (
     <>
       <ReactRouterRoutes>
-        <Route path="/" element={<AppbarAndNAvabar/>}>
-          <Route index path="" element={<MainScreen />}/>
+        <Route path="/" element={<AppbarAndNAvabar />}>
+          <Route index path="" element={<MainScreen />} />
         </Route>
         <Route path="/Auth" element={<UserLogin />} />
-        {Auth.isAuth() && (
+        <Route path="/changepassword" element={<AppbarAndNAvabar />}>
+          <Route path="" element={<ChangePassword />} />
+        </Route>
+        {Auth.isAuth() &&
           Modules.map((module) => (
-            <Route path={module.routeName} element={<AppbarAndNAvabar />} key={module.routeName}>
+            <Route
+              path={module.routeName}
+              element={<AppbarAndNAvabar />}
+              key={module.routeName}
+            >
               {module.routes.map((route) => (
                 <Route
                   key={route.path}
@@ -119,7 +134,9 @@ const Routes = (props) => {
                         path={childRoute.path}
                         element={
                           <Suspense fallback={<Loader />}>
-                            <PrivateRoute>{<childRoute.component />}</PrivateRoute>
+                            <PrivateRoute>
+                              {<childRoute.component />}
+                            </PrivateRoute>
                           </Suspense>
                         }
                       />
@@ -127,8 +144,7 @@ const Routes = (props) => {
                 </Route>
               ))}
             </Route>
-          ))
-        )}
+          ))}
         <Route path="*" element={<UserLogin />} />
       </ReactRouterRoutes>
     </>

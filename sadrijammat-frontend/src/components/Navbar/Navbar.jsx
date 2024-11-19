@@ -97,7 +97,7 @@ export const Navbar = (props) => {
           open={menuOpen}
           onClose={() => setMenuOpen(false)}
         >
-          <MenuItem onClick={() => setMenuOpen(false)}>
+          <MenuItem onClick={() => navigate('changepassword')}>
             <ListItemIcon>
               <Settings />
             </ListItemIcon>

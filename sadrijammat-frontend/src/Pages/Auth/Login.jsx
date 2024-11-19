@@ -108,9 +108,9 @@ const LoginForm = (props) => {
             Login
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography align="center">
-            Don't Have an account{" "}
+            Don't Have an account
             <Link
               sx={{ cursor: "pointer", textDecoration: "none" }}
               onClick={() => props.toggleForm(1)}
@@ -118,7 +118,7 @@ const LoginForm = (props) => {
               Sign Up
             </Link>
           </Typography>
-        </Grid>
+        </Grid> */}
       </Grid>
     </form>
   );
